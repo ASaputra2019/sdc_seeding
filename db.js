@@ -8,7 +8,7 @@ const propertySchema = new mongoose.Schema ({
   id: { type: Number, index: true, unique: true, dropDups: true },
   propertyInfo_propType: String,
   propertyInfo_title: String,
-  propertyInfo_location: String,
+  propertyInfo_location: { type: String, index: true},
   propertyInfo_numGuests: { type: Number, index: true},
   beds_quantity: Number,
   amenities: {basic: Array, notIncluded: Array, iconUrl: Array},
