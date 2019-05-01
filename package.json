@@ -1,0 +1,24 @@
+{
+  "name": "sdc_seeding",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ASaputra2019/sdc_seeding.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ASaputra2019/sdc_seeding/issues"
+  },
+  "homepage": "https://github.com/ASaputra2019/sdc_seeding#readme",
+  "dependencies": {
+    "mongod": "^2.0.0",
+    "mongoose": "^5.5.5"
+  }
+}
