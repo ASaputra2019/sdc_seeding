@@ -1,41 +1,25 @@
-const mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
+const MongoClient = require('mongodb').MongoClient;
+const mongoOptions = { useNewUrlParser: true };
 
-const mongoURI = 'mongodb://18.221.181.198:27017/airbnbDesc';
-const auth = {
-  user: '',
-  password: ''
-};
-const db = mongoose.connect(mongoURI, {auth, useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true, autoIndex: false })
-db
-  .then(db => console.log(`Connected to: ${mongoURI}`))
-  .catch(err => {
-    console.log(`There was a problem connecting to mongo at: ${mongoURI}`)
-    console.log(err);
-  });
+const url = 'mongodb://localhost:27017';
+const dbName = 'airbnbDesc';
 
-const propertySchema = new mongoose.Schema ({
-    id: { type: Number, index: true, unique: true, dropDups: true },
-    propertyInfo_propType: String,
-    propertyInfo_title: String,
-    propertyInfo_location: { type: String, index: true},
-    propertyInfo_numGuests: { type: Number, index: true},
-    beds_quantity: Number,
-    amenities: {basic: Array, notIncluded: Array, iconUrl: Array},
-    numBaths: Number,
-    host_name: { type: String }, 
-    host_pictureUrl: String,
-    summary: Array
-  });
-  
-let Property = mongoose.model('housedescriptions', propertySchema);
-  
 let counter = 1;
 let startTime = new Date();
 let ptarget = 1e7;
 let inprog = 0;
 let ok = true;
 
+MongoClient.connect(url, mongoOptions, (err, client) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("connected to mongoDB");
+    var db = client.db(dbName);
+    var collection = db.collection("properties");
+    generateProperty(collection);
+  }
+});
 
 const adjectives = ['soft', 'open', 'amazing', 'expensive', 'beautiful', 'elegant', 'narrow', 'wet', 'classy', 'spacious', 'lively', 'colorful', 'shiny', 'marvelous', 'nicest', 'comfortable', 'small', 'big', 'huge', 'great', 'impossible', 'possible', 'unremarkable', 'remarkable', 'the best', 'spectacular', 'outstanding', 'lovely', 'incomparable', 'pleasant', 'wonderful', 'incredible', 'marvelous', 'perfect'];
 const adverbs = ['lively', 'actively', 'happily', 'graciously', 'generously', 'genuinely', 'poorly', 'intensely', 'depressingly', 'properly', 'insanely', 'terribly', 'widely', 'wisely', 'stupidly', 'improperly', 'correctly', 'fairly', 'comfortably', 'dryly', 'inconspicuously', 'humorously', 'proactively', 'gracefully'];
@@ -139,7 +123,7 @@ let hostImgs = [
 ];
 //////////// TODO ///////////////
 
-generateProperty = () => {
+generateProperty = (collection) => {
   let propObj = {
     propertyInfo_propType: randomElement(propTypes),
     propertyInfo_title: randomElement(titles),
@@ -160,7 +144,7 @@ generateProperty = () => {
   };
 
   ptarget--; inprog++;
-  Property.insertOne(propObj)
+  collection.insertOne(propObj)
     .then(() => {
       inprog--;
 
